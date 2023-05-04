@@ -7,7 +7,8 @@ const errorBox = document.getElementById('error')
 
 let curOrientation = 'portrait' 
 let responseList =[];           // store responses to use at image orientation change
-let currentQuery;
+let currentQuery; 
+let currentPage= 1
 let currentProcess = "curatedImages"    //this varible is at scroll handling to decide which function t0 call 
 const per_page = 24
 
@@ -26,14 +27,13 @@ function displayImages(response) {
 }
 
 // Function to search Images
-async function searchImages(query) {  
+async function searchImages(query, page) {  
     if (!errorBox.classList.contains('hidden')) {
         errorBox.classList.toggle('grid')
         errorBox.classList.toggle('hidden')
     }
    
-    let page = randomPage()
-    console.log("page NO: " +page)
+    // console.log("page NO: " +page)
     try {
             const data = await fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=${per_page}&page=${page}`, {
                 method: "GET",
@@ -52,6 +52,7 @@ async function searchImages(query) {
                 displayImages(response)   
             }
             currentProcess = 'searchImages' 
+            currentPage = page + 1
 
         } catch(error) { 
             console.log(error)
@@ -66,13 +67,13 @@ async function searchImages(query) {
     
 function randomPage() {  
     // The max results we can get with each api call is 8000 and  we are requesting 24 page for each api call
-    maxPage= Math.ceil(8000/per_page)                         
-    let page = Math.ceil(Math.random() * maxPage) 
-    return page
+    
 }
 
-async function curatedImages() {
-    let page = randomPage() 
+async function curatedImages() { 
+    maxPage= Math.ceil(8000/per_page)                         
+    let page = Math.ceil(Math.random() * maxPage) 
+    
     if (!errorBox.classList.contains('hidden')) {
         errorBox.classList.toggle('grid')
         errorBox.classList.toggle('hidden')
@@ -87,6 +88,7 @@ async function curatedImages() {
 
             // Store the json and call the displayImages() function 
             const response = await data.json() 
+            console.log(response)
             // if server returns an empty array then the throw an error
             if (response.photos.length === 0) {
                 throw new Error("Oops! Server didn't return any photos. Try Again :)")
@@ -150,8 +152,9 @@ searchBtn.addEventListener("click", () => {
     //empty the innerHTML with every new manual search (scroll searchs aren't manual searchs)
     gridContainer.innerHTML= ''
     //and empty the response list array
-    responseList = []
-    searchImages(query) 
+    responseList = [] 
+    currentPage = 1
+    searchImages(query, currentPage) 
     currentQuery = query 
     currentProcess = 'searchImages'
   
@@ -167,7 +170,8 @@ inputBox.addEventListener('keydown', function (event) {
         }
         gridContainer.innerHTML= ''
         responseList = []
-        searchImages(query); 
+        currentPage = 1
+        searchImages(query, currentPage) 
         currentQuery = query                       // Save the currentQuery. We will use use this for scrollHandling
         currentProcess = 'searchImages'            // update the currentProcess as searchImages. We will use this for scrollHandling
     }
@@ -183,7 +187,7 @@ function handleScroll() {
         if (currentProcess === 'curatedImages') {
             curatedImages()
         } else if (currentProcess === 'searchImages') {
-            searchImages(currentQuery)
+            searchImages(currentQuery, currentPage)
         } else {
             console.log("Exception: unknown currentProcess value")
         }
@@ -191,4 +195,3 @@ function handleScroll() {
 } 
 window.addEventListener('scroll', handleScroll);
 
-curatedImages()
