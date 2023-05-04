@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="fixed bg-gradient-to-r from-[#ebf4f5] to-[#b5c6e0] shadow-[0px_15px_40px_0_rgba(0,0,0,0.3)] w-full h-20 sm:h-24 bg-red-300 flex items-center justify-around py-3  flex-wrap"> 
+        <nav class="fixed bg-gradient-to-r from-[#ebf4f5] to-[#b5c6e0] shadow-[0px_15px_40px_0_rgba(0,0,0,0.3)] w-full h-20 sm:h-24 bg-red-300 flex items-center justify-around py-3 flex-wrap"> 
             <h1 id="logo" class="font-BrunoAceSC text-cliplg font-bold text-center text-xl sm:text-2xl md:text-3xl">Image <br> Gallery</h1>
             <div class="flex justify-center shadow-[0px_5px_10px_0_rgba(0,0,0,0.3)] min-w-[160px] max-w-[450px] w-1/2">
                 <input 
@@ -24,9 +24,17 @@
         </nav>
     </header> 
 
-    <main>
+    <main class="pt-24 sm:pt-28"> 
+        <div id="error" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[90%] sm:w-4/5 lg:w-2/3 h-3/5 rounded-xl shadow-[5px_15px_35px_0_rgba(0,0,0,0.4)] bg-white hidden place-content-center font-Roboto text-3xl md:text-5xl text-red-600 text-center p-5"></div>
         <div id="grid-container" class="grid-container portrait"> 
-            
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="https://images.pexels.com/photos/13694210/pexels-photo-13694210.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="https://images.pexels.com/photos/13692237/pexels-photo-13692237.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=800" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="" alt=""></div>
+            <div class="box portrait"><img class="w-full h-full rounded-xl" src="" alt=""></div>
         </div>
     </main>
 
