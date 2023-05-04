@@ -3,11 +3,12 @@ const inputBox =document.querySelector("input")
 const searchBtn = document.getElementById('search-btn')
 const orientationBtn = document.getElementById('orientation-btn') 
 const gridContainer = document.getElementById('grid-container') 
+const errorBox = document.getElementById('error')
 
 let curOrientation = 'portrait' 
- let responseList =[];
- let currentQuery;
- let currentProcess = "curatedImages"
+let responseList =[];
+let currentQuery;
+let currentProcess = "curatedImages"
  
 document.cookie = "mycookie=value; SameSite=None; Secure";
 
@@ -23,14 +24,16 @@ function displayImages(response) {
         const img = div.querySelector("img")
         img.src = urls[i]
         gridContainer.appendChild(div) 
-  
       }
 }
 
 // Function to search Images
-async function searchImages(query) { 
+async function searchImages(query) {  
+    if (!errorBox.classList.contains('hidden')) {
+        errorBox.classList.toggle('grid')
+        errorBox.classList.toggle('hidden')
+    }
    
-       
     let page = randomPage()
     console.log("page NO: " +page)
     try {
@@ -42,15 +45,23 @@ async function searchImages(query) {
             })
     
             const response = await data.json()
-    
-            responseList = []
-            responseList.push(response)             // store the response in a responseList for later use at orientation button click event
-            displayImages(response)   
+            console.log(response)  
+            if (response.photos.length === 0) {
+                throw new Error("Oops! Server didn't return any photos. Try Again :)")
+            }
+            if (response.photos.length !== 0) {
+                responseList.push(response)             // store the response in a responseList for later use at orientation button click event
+                displayImages(response)   
+            }
             currentProcess = 'searchImages' 
-            currentQuery = query
 
-        } catch(error) {
-            console.error('Error searching for images:', error)
+        } catch(error) { 
+            console.log(error)
+            console.log(error.message) 
+            errorBox.classList.add('grid') 
+            errorBox.classList.remove('hidden')  
+            errorBox.innerHTML = error.message
+
             // handle the error here, e.g. display an error message to the user
         }
 }
@@ -180,4 +191,4 @@ function handleScroll() {
 } 
 window.addEventListener('scroll', handleScroll);
 
-curatedImages()
+// curatedImages()
