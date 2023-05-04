@@ -6,19 +6,17 @@ const gridContainer = document.getElementById('grid-container')
 const errorBox = document.getElementById('error')
 
 let curOrientation = 'portrait' 
-let responseList =[];
+let responseList =[];           // store responses to use at image orientation change
 let currentQuery;
-let currentProcess = "curatedImages"
- 
-document.cookie = "mycookie=value; SameSite=None; Secure";
+let currentProcess = "curatedImages"    //this varible is at scroll handling to decide which function t0 call 
+const per_page = 24
 
 function displayImages(response) { 
-
+    //grab the urls from the response and the store it in a rray
     const urls = response.photos.map(photo => photo.src[curOrientation]);  
-    
     const box = `<div class="box ${curOrientation}"><img class="w-full h-full rounded-xl" src="" alt=""></div>`;
-   
-    for (let i = 0; i < 24; i++) {
+   // run an loop 24 times to append 24 imagediv in the grid-container
+    for (let i = 0; i < per_page; i++) {
         const div = document.createElement("div")
         div.innerHTML = box;
         const img = div.querySelector("img")
@@ -37,7 +35,7 @@ async function searchImages(query) {
     let page = randomPage()
     console.log("page NO: " +page)
     try {
-            const data = await fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=24&page=${page}`, {
+            const data = await fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=${per_page}&page=${page}`, {
                 method: "GET",
                 headers: { 
                     Authorization: apiKey,
@@ -66,18 +64,21 @@ async function searchImages(query) {
         }
 }
     
-
 function randomPage() {  
     // The max results we can get with each api call is 8000 and  we are requesting 24 page for each api call
-    maxPage= Math.ceil(8000/24)                         
+    maxPage= Math.ceil(8000/per_page)                         
     let page = Math.ceil(Math.random() * maxPage) 
     return page
 }
 
 async function curatedImages() {
-    let page = randomPage()
+    let page = randomPage() 
+    if (!errorBox.classList.contains('hidden')) {
+        errorBox.classList.toggle('grid')
+        errorBox.classList.toggle('hidden')
+    } 
     try {   
-            const data = await fetch(`https://api.pexels.com/v1/curated/?page=${page}&per_page=24`, {
+            const data = await fetch(`https://api.pexels.com/v1/curated/?page=${page}&per_page=${per_page}`, {
                 method: "GET",
                 headers: { 
                     Authorization: apiKey,
@@ -86,20 +87,25 @@ async function curatedImages() {
 
             // Store the json and call the displayImages() function 
             const response = await data.json() 
-            
-            responseList.push(response)            // store the response in a responseList for later use at orientation button click event
-            console.log(response)
-            displayImages(response)  
+            // if server returns an empty array then the throw an error
+            if (response.photos.length === 0) {
+                throw new Error("Oops! Server didn't return any photos. Try Again :)")
+            } //if photos array is not empty then save the responses
+            if (response.photos.length !== 0) {
+                responseList.push(response)             // store the response in a responseList for later use at orientation button click event
+                displayImages(response)   
+            }  
             currentProcess = 'curatedImages'
 
-        }   catch(error) {
-            console.error('Error searching for images:', error)
-            // handle the error here, e.g. display an error message to the user
+        }   catch(error) {      // handle the error here, e.g. display an error message to the users
+            console.error(error.message) 
+            errorBox.classList.add('grid') 
+            errorBox.classList.remove('hidden')  
+            errorBox.innerHTML = error.message
         }
 }
 
 orientationBtn.addEventListener("click", () => {
-    const boxes = document.querySelectorAll('.box')
     
     //toggle the curOrientation variable value and gridContainer class .
     if (curOrientation === 'portrait') { 
@@ -108,35 +114,28 @@ orientationBtn.addEventListener("click", () => {
         gridContainer.classList.toggle("landscape") 
 
         console.log(gridContainer.classList) 
-        
-        // use a 2 second gap to play an animation and display the responses
-        
+        // empty the grid and then show the images with changed orientaion
         gridContainer.innerHTML = '' 
         if (responseList.length >= 1) {
             responseList.forEach((response) => {
                 displayImages(response) 
               
             } ) 
-            console.log('line 91 executed. ')
             console.log(responseList)
         }
 
     } else { 
         curOrientation = 'portrait'
         gridContainer.classList.toggle("portrait") 
-        gridContainer.classList.toggle("landscape")
+        gridContainer.classList.toggle("landscape") 
+        console.log(gridContainer.classList) 
 
-        console.log(gridContainer.classList)
-
-        // use a 2 second gap to play an animation and display the responses
-     
+        // empty the grid and then show the images with changed orientaion
         gridContainer.innerHTML = ''
         if (responseList.length >= 1) {
             responseList.forEach((response) => {
-                displayImages(response)
-              
+                displayImages(response)          
             } ) 
-            console.log('line 110 executed. ')
             console.log(responseList)
         }
     }
@@ -147,9 +146,10 @@ searchBtn.addEventListener("click", () => {
     if (query === "") {
         alert("Please Enter some Text")
         return;
-    }
+    } 
+    //empty the innerHTML with every new manual search (scroll searchs aren't manual searchs)
     gridContainer.innerHTML= ''
-    
+    //and empty the response list array
     responseList = []
     searchImages(query) 
     currentQuery = query 
@@ -191,4 +191,4 @@ function handleScroll() {
 } 
 window.addEventListener('scroll', handleScroll);
 
-// curatedImages()
+curatedImages()
