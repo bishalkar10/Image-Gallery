@@ -64,11 +64,6 @@ async function searchImages(query, page) {
             // handle the error here, e.g. display an error message to the user
         }
 }
-    
-function randomPage() {  
-    // The max results we can get with each api call is 8000 and  we are requesting 24 page for each api call
-    
-}
 
 async function curatedImages() { 
     maxPage= Math.ceil(8000/per_page)                         
