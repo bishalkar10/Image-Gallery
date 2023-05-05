@@ -190,4 +190,8 @@ function handleScroll() {
 } 
 window.addEventListener('scroll', handleScroll);
 
-curatedImages()
+curatedImages() 
+
+// write a function return random pages
+// the max number can be 500 
+// 500/80 = 6.25
