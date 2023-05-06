@@ -12,11 +12,21 @@ let currentPage= 1
 let currentProcess = "curatedImages"    //this varible is at scroll handling to decide which function t0 call 
 const per_page = 24
 
+// get animation element and add event listener to it
+const animatedElement = document.getElementById('animation')
+
+animatedElement.addEventListener('animationend', () => {  
+    //get the welcome element and hide it
+    const welcome = document.getElementById('welcome') 
+    welcome.style.display = 'none';
+  
+});
+
 function displayImages(response) { 
-    //grab the urls from the response and the store it in a rray
+    // get the urls of the images from the response with current orientation and store them in an array
     const urls = response.photos.map(photo => photo.src[curOrientation]);  
     const box = `<div class="box ${curOrientation}"><img class="w-full h-full rounded-xl" src="" alt=""></div>`;
-   // run an loop 24 times to append 24 imagediv in the grid-container
+    // run a loop to create divs and add the image to it and then append it to the gridContainer
     for (let i = 0; i < per_page; i++) {
         const div = document.createElement("div")
         div.innerHTML = box;
@@ -26,14 +36,14 @@ function displayImages(response) {
       }
 }
 
-// Function to search Images
-async function searchImages(query, page) {  
+// function to search images asynchrnously
+async function searchImages(query, page) {   
+    // if the error box is not hidden then hide it
     if (!errorBox.classList.contains('hidden')) {
         errorBox.classList.toggle('grid')
         errorBox.classList.toggle('hidden')
     }
-   
-    // console.log("page NO: " +page)
+    // use a try catch block to handle errors
     try {
             const data = await fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=${per_page}&page=${page}`, {
                 method: "GET",
@@ -41,34 +51,34 @@ async function searchImages(query, page) {
                     Authorization: apiKey,
                 }
             })
-    
+            // Store the  json 
             const response = await data.json()
-            console.log(response)  
+            console.log(response)   
+            // if response returns an with no photos then throw an error
             if (response.photos.length === 0) {
                 throw new Error("Oops! Server didn't return any photos. Try Again :)")
-            }
+            } 
+            // if photos array is not empty then save the responses and call the displayImages() function
             if (response.photos.length !== 0) {
                 responseList.push(response)             // store the response in a responseList for later use at orientation button click event
                 displayImages(response)   
             }
             currentProcess = 'searchImages' 
             currentPage = page + 1
-
+            // catch the error and display it to the user
         } catch(error) { 
             console.log(error)
-            console.log(error.message) 
             errorBox.classList.add('grid') 
             errorBox.classList.remove('hidden')  
             errorBox.innerHTML = error.message
-
-            // handle the error here, e.g. display an error message to the user
         }
 }
-
-async function curatedImages() { 
+// function to search random images asynchrnously
+async function curatedImages() {  
+    // get a random page number but it can't exceed 8000/per_page
     maxPage= Math.ceil(8000/per_page)                         
     let page = Math.ceil(Math.random() * maxPage) 
-    
+    // if the error box is not hidden then hide it
     if (!errorBox.classList.contains('hidden')) {
         errorBox.classList.toggle('grid')
         errorBox.classList.toggle('hidden')
@@ -104,7 +114,8 @@ async function curatedImages() {
 
 orientationBtn.addEventListener("click", () => {
     
-    //toggle the curOrientation variable value and gridContainer class .
+    // toggle the orientation class of the gridContainer 
+    // if orientation is portrait then change it to landscape
     if (curOrientation === 'portrait') { 
         curOrientation = "landscape"
         gridContainer.classList.toggle("portrait") 
@@ -120,7 +131,7 @@ orientationBtn.addEventListener("click", () => {
             } ) 
             console.log(responseList)
         }
-
+        // if orientation is landscape then change it to portrait
     } else { 
         curOrientation = 'portrait'
         gridContainer.classList.toggle("portrait") 
@@ -144,9 +155,8 @@ searchBtn.addEventListener("click", () => {
         alert("Please Enter some Text")
         return;
     } 
-    //empty the innerHTML with every new manual search (scroll searchs aren't manual searchs)
+    //empty the innerHTML with every new manual search (scroll searchs aren't manual searchs) and empty the response list array
     gridContainer.innerHTML= ''
-    //and empty the response list array
     responseList = [] 
     currentPage = 1
     searchImages(query, currentPage) 
@@ -154,15 +164,17 @@ searchBtn.addEventListener("click", () => {
     currentProcess = 'searchImages'
   
 })
-
+// add an event listener to the input box to search images when user presses enter
 inputBox.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter') { 
         event.preventDefault();
-        const query = inputBox.value
+        const query = inputBox.value 
+        // if the input box is empty then alert the user
         if (query === "") {
             alert("Please Enter some Text")
             return;
-        }
+        } 
+        // empty the innerHTML with every new manual search (scroll searchs aren't manual searchs) and empty the response list array
         gridContainer.innerHTML= ''
         responseList = []
         currentPage = 1
@@ -172,12 +184,13 @@ inputBox.addEventListener('keydown', function (event) {
     }
 });
 
-function handleScroll() {
-    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+function handleScroll() { 
+    // get the current scroll position and compare it with the scrollHeight and clientHeight to check if the user has scrolled to the bottom
+    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop; 
     const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
     const scrolledToBottom = Math.ceil(scrollTop + clientHeight)  >= scrollHeight
-
+    // if the user has scrolled to the bottom then call the curatedImages() or searchImages() function depending on the currentProcess
     if (scrolledToBottom) {
         if (currentProcess === 'curatedImages') {
             curatedImages()
@@ -187,11 +200,8 @@ function handleScroll() {
             console.log("Exception: unknown currentProcess value")
         }
     } 
-} 
+}  
+// add an event listener to the window to handle the scroll event
 window.addEventListener('scroll', handleScroll);
-
+// call the curatedImages() function when the page loads
 curatedImages() 
-
-// write a function return random pages
-// the max number can be 500 
-// 500/80 = 6.25
