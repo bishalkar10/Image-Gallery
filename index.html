@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+    <title>IMAGE GALLERY</title>
     <link rel="stylesheet" href="./dist/output.css"> 
     <script src="./main.js" defer></script>
 </head>
@@ -24,7 +24,16 @@
         </nav>
     </header> 
 
-    <main class="pt-24 sm:pt-28"> 
+    <div id="welcome" class="fixed grid place-content-center text-center w-screen h-screen bg-gradient-to-r from-[#f7c0ec] to-[#a7bdea]">
+        <span class="font-Roboto text-6xl animate-welcome-to">WELCOME</span>
+        <span class="font-Roboto text-4xl animate-to">TO</span> 
+        <br>
+        <span id="animation" class="font-BrunoAceSC text-5xl animate-logo-animation">IMAGE</span>
+        <span class="font-BrunoAceSC text-5xl animate-logo-animation">GALLERY</span>
+    </div> 
+
+    <main class="pt-24 sm:pt-28">  
+
         <div id="error" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[90%] sm:w-4/5 lg:w-2/3 h-3/5 rounded-xl shadow-[5px_15px_35px_0_rgba(0,0,0,0.4)] bg-white hidden place-content-center font-Roboto text-3xl md:text-5xl text-red-600 text-center p-5"></div>
         <div id="grid-container" class="grid-container portrait"> 
             
