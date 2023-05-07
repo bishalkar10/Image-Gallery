@@ -189,7 +189,7 @@ function handleScroll() {
     const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop; 
     const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
     const clientHeight = document.documentElement.clientHeight || window.innerHeight;
-    const scrolledToBottom = Math.ceil(scrollTop + clientHeight + 10)  >= scrollHeight
+    const scrolledToBottom = Math.ceil(scrollTop + clientHeight + 75)  >= scrollHeight
     // if the user has scrolled to the bottom then call the curatedImages() or searchImages() function depending on the currentProcess
     if (scrolledToBottom) {
         if (currentProcess === 'curatedImages') {
