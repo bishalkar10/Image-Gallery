@@ -6,8 +6,8 @@ const gridContainer = document.getElementById('grid-container')
 const errorBox = document.getElementById('error')
 
 let curOrientation = 'portrait' 
-let responseList =[];           // store responses to use at image orientation change
-let currentQuery; 
+let responseList =[]           // store responses to use at image orientation change
+let currentQuery 
 let currentPage= 1
 let currentProcess = "curatedImages"    //this varible is at scroll handling to decide which function t0 call 
 const per_page = 24
@@ -18,20 +18,18 @@ const animatedElement = document.getElementById('animation')
 animatedElement.addEventListener('animationend', () => {  
     //get the welcome element and hide it
     const welcome = document.getElementById('welcome') 
-    welcome.style.display = 'none';
+    welcome.style.display = 'none'
   
-});
+})
 
 function displayImages(response) { 
     // get the urls of the images from the response with current orientation and store them in an array
-    const urls = response.photos.map(photo => photo.src[curOrientation]);  
-    const box = `<div class="box ${curOrientation}"><img class="w-full h-full rounded-xl" src="" alt=""></div>`;
+    const urls = response.photos.map(photo => photo.src[curOrientation])  
     // run a loop to create divs and add the image to it and then append it to the gridContainer
     for (let i = 0; i < per_page; i++) {
         const div = document.createElement("div")
-        div.innerHTML = box;
-        const img = div.querySelector("img")
-        img.src = urls[i]
+        div.className = `box ${curOrientation}`
+        div.innerHTML = `<img class="w-full h-full rounded-xl" src="${urls[i]}" alt="">`
         gridContainer.appendChild(div) 
       }
 }
@@ -153,7 +151,7 @@ searchBtn.addEventListener("click", () => {
     const query = inputBox.value
     if (query === "") {
         alert("Please Enter some Text")
-        return;
+        return
     } 
     //empty the innerHTML with every new manual search (scroll searchs aren't manual searchs) and empty the response list array
     gridContainer.innerHTML= ''
@@ -167,12 +165,12 @@ searchBtn.addEventListener("click", () => {
 // add an event listener to the input box to search images when user presses enter
 inputBox.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') { 
-        event.preventDefault();
+        event.preventDefault()
         const query = inputBox.value 
         // if the input box is empty then alert the user
         if (query === "") {
             alert("Please Enter some Text")
-            return;
+            return
         } 
         // empty the innerHTML with every new manual search (scroll searchs aren't manual searchs) and empty the response list array
         gridContainer.innerHTML= ''
@@ -182,26 +180,32 @@ inputBox.addEventListener('keydown', function (event) {
         currentQuery = query                       // Save the currentQuery. We will use use this for scrollHandling
         currentProcess = 'searchImages'            // update the currentProcess as searchImages. We will use this for scrollHandling
     }
-});
+})
+let scrollTimeout
 
 function handleScroll() { 
-    // get the current scroll position and compare it with the scrollHeight and clientHeight to check if the user has scrolled to the bottom
-    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop; 
-    const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight || window.innerHeight;
-    const scrolledToBottom = Math.ceil(scrollTop + clientHeight)  >= scrollHeight
-    // if the user has scrolled to the bottom then call the curatedImages() or searchImages() function depending on the currentProcess
-    if (scrolledToBottom) {
-        if (currentProcess === 'curatedImages') {
-            curatedImages()
-        } else if (currentProcess === 'searchImages') {
-            searchImages(currentQuery, currentPage)
-        } else {
-            console.log("Exception: unknown currentProcess value")
-        }
+
+  clearTimeout(scrollTimeout)
+  
+  scrollTimeout = setTimeout(function() {
+    const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop 
+    const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight
+    const clientHeight = document.documentElement.clientHeight || window.innerHeight
+    const scrolledToBottom = Math.ceil(scrollTop + clientHeight + 100) >= scrollHeight
+
+    if (scrolledToBottom) { 
+      if (currentProcess === 'curatedImages') {
+        curatedImages()
+      } else if (currentProcess === 'searchImages') {
+        searchImages(currentQuery, currentPage)
+      } else {
+        console.log("Exception: unknown currentProcess value")
+      }
     } 
-}  
+  }, 500) 
+}
+ 
 // add an event listener to the window to handle the scroll event
-window.addEventListener('scroll', handleScroll);
+window.addEventListener('scroll', handleScroll)
 // call the curatedImages() function when the page loads
 curatedImages() 
