@@ -584,6 +584,20 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.box.landscape{
+  aspect-ratio: 1200/627;
+  width: 100%;
+  border-radius: 0.75rem;
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+  --tw-gradient-from: #f6fff8 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(246 255 248 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  --tw-gradient-to: #edede9 var(--tw-gradient-to-position);
+  --tw-shadow: 5px 5px 10px 0 rgba(0,0,0,0.4);
+  --tw-shadow-colored: 5px 5px 10px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .fixed{
   position: fixed;
 }
@@ -622,6 +636,10 @@ video {
 
 .h-7{
   height: 1.75rem;
+}
+
+.h-full{
+  height: 100%;
 }
 
 .h-screen{
@@ -677,17 +695,11 @@ video {
 @keyframes logo{
   0%{
     opacity: 0;
-    transform: translateY(-70%);
+    transform: translateY(-100%);
   }
 
-  60%{
+  70%{
     opacity: 0;
-    transform: translateY(-70%);
-  }
-
-  90%{
-    opacity: 1;
-    transform: translateY(0);
   }
 
   100%{
@@ -697,7 +709,7 @@ video {
 }
 
 .animate-logo-animation{
-  animation: logo 8s linear -3s;
+  animation: logo 5s linear -2s;
 }
 
 @keyframes welcomeTo{
@@ -711,7 +723,7 @@ video {
 }
 
 .animate-to{
-  animation: welcomeTo 3s linear;
+  animation: welcomeTo 2.5s linear;
 }
 
 @keyframes welcomeTo{
@@ -725,7 +737,7 @@ video {
 }
 
 .animate-welcome-to{
-  animation: welcomeTo 3s linear;
+  animation: welcomeTo 2s linear;
 }
 
 .flex-wrap{
