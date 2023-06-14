@@ -13,14 +13,7 @@ You can search the about topics on the search bar and hit the **🔍** or press 
 7. type `git clone <repository url>`  in command line argument.
 
 # Requirements :  
-This repo doesn't have much dependencies, just Tailwindcss. 
-1. If you don't have node.js intalled on your machine then visit *https://nodejs.org/en/download*.  
-2. Then navigate to the dirctory where you have cloned the repo and then open the terminal window.
-Type `npm init` to initialize the **npm(node package manager)**. Now type   
-```
-npm install -D tailwindcss
-npx tailwindcss init
-```
+Run `npm i` to install all the dependencies. 
 Now you are ready to go. Open the index.html file with your browser. (My preference is Google Chrome)
 
 # Author 
