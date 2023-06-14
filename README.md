@@ -10,10 +10,10 @@ You can search the about topics on the search bar and hit the **🔍** or press 
 4. click on the clipboard button to copy. 
 5. Open your **Code Editor** or **IDE** whatever you have.
 6. Navigate to the directory where you want to clone the repo. 
-7. type `git clone <repository url>`
+7. type `git clone <repository url>`  in command line argument.
 
 # Requirements :  
-This repo doesn't doesn't have much dependencies, just Tailwindcss. 
+This repo doesn't have much dependencies, just Tailwindcss. 
 1. If you don't have node.js intalled on your machine then visit *https://nodejs.org/en/download*.  
 2. Then navigate to the dirctory where you have cloned the repo and then open the terminal window.
 Type `npm init` to initialize the **npm(node package manager)**. Now type   
