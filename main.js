@@ -26,6 +26,7 @@ animatedElement.addEventListener("animationend", () => {
 function displayImages(response) {
   const photos = response.photos.map((photo) => ({
     url: photo.src[curOrientation],
+    originalUrl: photo.src.original,
     alt: photo.alt,
   }));
 
@@ -49,14 +50,28 @@ function displayImages(response) {
     const div = document.createElement("div");
     const img = document.createElement("img");
     div.classList.add("box", curOrientation);
-    img.classList.add("w-full", "h-full", "rounded-xl");
+    img.classList.add("w-full", "h-full", "rounded-xl", "text-transparent");
     img.dataset.src = photo.url;
+    img.dataset.originalUrl = photo.originalUrl; // * Store the original url of the image
     img.alt = photo.alt;
     div.appendChild(img);
     gridContainer.appendChild(div);
 
     observer.observe(img);
   }
+
+  gridContainer.addEventListener("click", (event) => {
+    if (event.target.tagName === "IMG") {
+      const originalUrl = event.target.dataset.originalUrl;
+      window.open(originalUrl, "_blank"); // open the image in a new tab
+    }
+  });
+
+  gridContainer.addEventListener("error", (event) => {
+    if (event.target.tagName === "IMG") {
+      event.target.classList.remove("text-transparent"); // * if the image fails to load then remove the text-transparent class then it will show the alt text in black color;
+    }
+  });
 }
 
 // function to search images asynchrnously
