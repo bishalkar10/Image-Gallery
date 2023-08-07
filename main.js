@@ -12,6 +12,8 @@ let currentPage = 1;
 let currentProcess = "curatedImages"; //this varible is at scroll handling to decide which function t0 call
 const per_page = 24;
 
+let isScrolling = false; // *  used as an argument in handleScroll fucntion
+
 // get animation element and add event listener to it
 const animatedElement = document.getElementById("animation");
 
@@ -207,33 +209,37 @@ inputBox.addEventListener("keydown", function (event) {
     currentProcess = "searchImages"; // update the currentProcess as searchImages. We will use this for scrollHandling
   }
 });
-let scrollTimeout;
 
 function handleScroll() {
-  clearTimeout(scrollTimeout);
+  if (isScrolling) {
+    return;
+  }
 
-  scrollTimeout = setTimeout(function () {
-    const scrollTop =
-      (document.documentElement && document.documentElement.scrollTop) ||
-      document.body.scrollTop;
-    const scrollHeight =
-      (document.documentElement && document.documentElement.scrollHeight) ||
-      document.body.scrollHeight;
-    const clientHeight =
-      document.documentElement.clientHeight || window.innerHeight;
-    const scrolledToBottom =
-      Math.ceil(scrollTop + clientHeight + 100) >= scrollHeight;
+  const scrollTop =
+    (document.documentElement && document.documentElement.scrollTop) ||
+    document.body.scrollTop;
+  const scrollHeight =
+    (document.documentElement && document.documentElement.scrollHeight) ||
+    document.body.scrollHeight;
+  const clientHeight =
+    document.documentElement.clientHeight || window.innerHeight;
+  const scrolledToBottom =
+    Math.ceil(scrollTop + clientHeight + 100) >= scrollHeight;
 
-    if (scrolledToBottom) {
-      if (currentProcess === "curatedImages") {
-        curatedImages();
-      } else if (currentProcess === "searchImages") {
-        searchImages(currentQuery, currentPage);
-      } else {
-        console.log("Exception: unknown currentProcess value");
-      }
+  if (scrolledToBottom) {
+    console.log("triggered handleScroll");
+    isScrolling = true;
+    if (currentProcess === "curatedImages") {
+      curatedImages();
+    } else if (currentProcess === "searchImages") {
+      searchImages(currentQuery, currentPage);
+    } else {
+      console.log("Exception: unknown currentProcess value");
     }
-  }, 500);
+    setTimeout(() => {
+      isScrolling = false;
+    }, 500);
+  }
 }
 
 // add an event listener to the window to handle the scroll event
