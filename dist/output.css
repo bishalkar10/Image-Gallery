@@ -628,6 +628,10 @@ video {
   z-index: 10;
 }
 
+.block{
+  display: block;
+}
+
 .flex{
   display: flex;
 }
@@ -887,6 +891,10 @@ video {
 .text-red-600{
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+
+.text-transparent{
+  color: transparent;
 }
 
 .shadow-\[0px_15px_40px_0_rgba\(0\2c 0\2c 0\2c 0\.3\)\]{
