@@ -22,17 +22,38 @@ animatedElement.addEventListener("animationend", () => {
 });
 
 function displayImages(response) {
-  // get the urls of the images from the response with current orientation and store them in an array
-  const urls = response.photos.map((photo) => photo.src[curOrientation]);
-  // run a loop to create divs and add the image to it and then append it to the gridContainer
-  for (let i = 0; i < per_page; i++) {
+  const photos = response.photos.map((photo) => ({
+    url: photo.src[curOrientation],
+    alt: photo.alt,
+  }));
+
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1,
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        img.src = img.dataset.src;
+        observer.unobserve(img);
+      }
+    });
+  }, options);
+
+  for (const photo of photos) {
     const div = document.createElement("div");
     const img = document.createElement("img");
-    div.className = `box ${curOrientation}`;
+    div.classList.add("box", curOrientation);
     img.classList.add("w-full", "h-full", "rounded-xl");
-    img.src = urls[i];
+    img.dataset.src = photo.url;
+    img.alt = photo.alt;
     div.appendChild(img);
     gridContainer.appendChild(div);
+
+    observer.observe(img);
   }
 }
 
