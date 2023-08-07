@@ -1,22 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Bruno+Ace+SC&family=Roboto:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Bruno+Ace+SC&family=Roboto:wght@500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 @layer components {
-    
-    .grid-container.portrait {
-        @apply px-5 grid gap-4 grid-cols-[repeat(2,1fr)] sm:grid-cols-[repeat(3,1fr)] md:grid-cols-[repeat(4,1fr)] xl:grid-cols-[repeat(5,1fr)]
-    }  
-    .grid-container.landscape {
-        @apply px-5 grid gap-4 grid-cols-[repeat(2,1fr)] md:grid-cols-[repeat(3,1fr)] xl:grid-cols-[repeat(4,1fr)]
-    } 
-    .box.portrait {
-        @apply  w-full aspect-[800/1200] rounded-xl shadow-[5px_5px_10px_0_rgba(0,0,0,0.4)] bg-gradient-to-r from-[#f6fff8] to-[#edede9]
-    }  
-    .box.landscape {
-        @apply  w-full aspect-[1200/627] rounded-xl shadow-[5px_5px_10px_0_rgba(0,0,0,0.4)] bg-gradient-to-r from-[#f6fff8] to-[#edede9]
-    }  
+  .grid-container.portrait {
+    @apply px-5 grid gap-4 grid-cols-[repeat(2,1fr)] sm:grid-cols-[repeat(3,1fr)] md:grid-cols-[repeat(4,1fr)] xl:grid-cols-[repeat(5,1fr)];
+  }
+  .grid-container.landscape {
+    @apply px-5 grid gap-4 grid-cols-[repeat(2,1fr)] md:grid-cols-[repeat(3,1fr)] xl:grid-cols-[repeat(4,1fr)];
+  }
+  .box.portrait {
+    @apply w-full aspect-[800/1200] rounded-xl shadow-[5px_5px_10px_0_rgba(0,0,0,0.4)] bg-gradient-to-r from-[#f6fff8] to-[#edede9] hover:scale-110 hover:duration-300;
+  }
+  .box.landscape {
+    @apply w-full aspect-[1200/627] rounded-xl shadow-[5px_5px_10px_0_rgba(0,0,0,0.4)] bg-gradient-to-r from-[#f6fff8] to-[#edede9] hover:scale-110 hover:duration-300;
+  }
 }
