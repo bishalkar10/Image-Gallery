@@ -30,6 +30,22 @@ function displayImages(response) {
     alt: photo.alt,
   }));
 
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1,
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        img.src = img.dataset.src;
+        observer.unobserve(img);
+      }
+    });
+  }, options);
+
   for (const photo of photos) {
     const linkTag = document.createElement("a");
     linkTag.href = photo.originalUrl;
@@ -38,9 +54,9 @@ function displayImages(response) {
     img.classList.add("w-full", "h-full", "rounded-xl", "text-transparent"); // alt text is set to transparent so user don't have to see it while image is loading
     img.dataset.src = photo.url;
     img.alt = photo.alt;
-    img.loading = "lazy"; // set images to lazy loading
     linkTag.appendChild(img);
     gridContainer.appendChild(linkTag);
+    observer.observe(img);
   }
 
   // if the image fails to load then remove the text-transparent class then it will show the alt text in black color;
