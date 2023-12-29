@@ -30,43 +30,20 @@ function displayImages(response) {
     alt: photo.alt,
   }));
 
-  const options = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0.1,
-  };
-
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        img.src = img.dataset.src;
-        observer.unobserve(img);
-      }
-    });
-  }, options);
-
   for (const photo of photos) {
-    const div = document.createElement("div");
+    const linkTag = document.createElement("a");
+    linkTag.href = photo.originalUrl;
     const img = document.createElement("img");
-    div.classList.add("box", curOrientation);
-    img.classList.add("w-full", "h-full", "rounded-xl", "text-transparent");
+    linkTag.classList.add("box", curOrientation);
+    img.classList.add("w-full", "h-full", "rounded-xl", "text-transparent"); // alt text is set to transparent so user don't have to see it while image is loading
     img.dataset.src = photo.url;
-    img.dataset.originalUrl = photo.originalUrl; // * Store the original url of the image
     img.alt = photo.alt;
-    div.appendChild(img);
-    gridContainer.appendChild(div);
-
-    observer.observe(img);
+    img.loading = "lazy"; // set images to lazy loading
+    linkTag.appendChild(img);
+    gridContainer.appendChild(linkTag);
   }
 
-  gridContainer.addEventListener("click", (event) => {
-    if (event.target.tagName === "IMG") {
-      const originalUrl = event.target.dataset.originalUrl;
-      window.open(originalUrl, "_blank"); // open the image in a new tab
-    }
-  });
-
+  // if the image fails to load then remove the text-transparent class then it will show the alt text in black color;
   gridContainer.addEventListener("error", (event) => {
     if (event.target.tagName === "IMG") {
       event.target.classList.remove("text-transparent"); // * if the image fails to load then remove the text-transparent class then it will show the alt text in black color;
@@ -90,7 +67,7 @@ async function searchImages(query, page) {
         headers: {
           Authorization: apiKey,
         },
-      }
+      },
     );
     // Store the  json
     const response = await data.json();
@@ -132,7 +109,7 @@ async function curatedImages() {
         headers: {
           Authorization: apiKey,
         },
-      }
+      },
     );
 
     // Store the json and call the displayImages() function
