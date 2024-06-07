@@ -41,7 +41,11 @@ function displayImages(response) {
       if (entry.isIntersecting) {
         const img = entry.target;
         img.src = img.dataset.src;
-        observer.unobserve(img);
+        // if there is any error while loading the image remove the text-transparent class and we can see the alt text
+        img.addEventListener("error", () => {
+            img.classList.remove("text-transparent");
+        });
+        observer.unobserve(img); // stop observing the images
       }
     });
   }, options);
@@ -49,22 +53,16 @@ function displayImages(response) {
   for (const photo of photos) {
     const linkTag = document.createElement("a");
     linkTag.href = photo.originalUrl;
-    const img = document.createElement("img");
+    linkTag.target = "_blank"; // open the image in a new window
     linkTag.classList.add("box", curOrientation);
-    img.classList.add("w-full", "h-full", "rounded-xl", "text-transparent"); // alt text is set to transparent so user don't have to see it while image is loading
+    const img = document.createElement("img");
+    img.classList.add("w-full", "h-full", "rounded-xl", "text-transparent"); // alt text is set to transparent so user doesn't have to see it while image is loading
     img.dataset.src = photo.url;
     img.alt = photo.alt;
     linkTag.appendChild(img);
     gridContainer.appendChild(linkTag);
     observer.observe(img);
   }
-
-  // if the image fails to load then remove the text-transparent class then it will show the alt text in black color;
-  gridContainer.addEventListener("error", (event) => {
-    if (event.target.tagName === "IMG") {
-      event.target.classList.remove("text-transparent"); // * if the image fails to load then remove the text-transparent class then it will show the alt text in black color;
-    }
-  });
 }
 
 // function to search images asynchrnously
